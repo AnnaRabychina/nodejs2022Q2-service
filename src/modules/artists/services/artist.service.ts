@@ -14,8 +14,9 @@ export class ArtistService {
     const artist = this.artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
+    } else {
+      return artist;
     }
-    return artist;
   }
 
   public async createArtist(artist: IArtist): Promise<IArtist> {
@@ -29,17 +30,19 @@ export class ArtistService {
     const index = this.artists.findIndex((artist) => artist.id === id);
     if (!this.artists[index]) {
       throw new NotFoundException('Artist not found');
+    } else {
+      this.artists[index] = updatedArtist;
+      return updatedArtist;
     }
-    this.artists[index] = updatedArtist;
-    return updatedArtist;
   }
 
   public async deleteArtist(id: string): Promise<IArtist> {
     const artist = this.artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
+    } else {
+      this.artists.splice(this.artists.indexOf(artist), 1);
+      return artist;
     }
-    this.artists.splice(this.artists.indexOf(artist), 1);
-    return artist;
   }
 }

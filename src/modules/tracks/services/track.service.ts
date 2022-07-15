@@ -4,14 +4,14 @@ import { v4 as uuid4 } from 'uuid';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks: ITrack[] = [];
+  private static tracks: ITrack[] = [];
 
   public async getAllTracks(): Promise<ITrack[]> {
-    return this.tracks;
+    return TrackService.tracks;
   }
 
   public async getTrackById(id: string): Promise<ITrack> {
-    const track = this.tracks.find((track) => track.id === id);
+    const track = TrackService.tracks.find((track) => track.id === id);
     if (!track) {
       throw new NotFoundException('Track not found');
     } else {
@@ -21,28 +21,44 @@ export class TrackService {
 
   public async createTrack(track: ITrack): Promise<ITrack> {
     const newTrack = { ...track, id: uuid4() };
-    this.tracks.push(newTrack);
+    TrackService.tracks.push(newTrack);
     return newTrack;
   }
 
   public async updateTrack(id: string, track: ITrack): Promise<ITrack> {
     const updatedTrack = { ...track, id };
-    const index = this.tracks.findIndex((track) => track.id === id);
-    if (!this.tracks[index]) {
+    const index = TrackService.tracks.findIndex((track) => track.id === id);
+    if (!TrackService.tracks[index]) {
       throw new NotFoundException('Track not found');
     } else {
-      this.tracks[index] = updatedTrack;
+      TrackService.tracks[index] = updatedTrack;
       return updatedTrack;
     }
   }
 
   public async deleteTrack(id: string): Promise<ITrack> {
-    const track = this.tracks.find((track) => track.id === id);
+    const track = TrackService.tracks.find((track) => track.id === id);
     if (!track) {
       throw new NotFoundException('Track not found');
     } else {
-      this.tracks.splice(this.tracks.indexOf(track), 1);
+      TrackService.tracks.splice(TrackService.tracks.indexOf(track), 1);
       return track;
     }
+  }
+
+  public async deleteArtistIdById(artistId: string): Promise<void> {
+    TrackService.tracks.forEach((track) => {
+      if (track.artistId === artistId) {
+        track.artistId = null;
+      }
+    });
+  }
+
+  public async deleteAlbumIdById(albumId: string): Promise<void> {
+    TrackService.tracks.forEach((track) => {
+      if (track.albumId === albumId) {
+        track.albumId = null;
+      }
+    });
   }
 }

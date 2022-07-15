@@ -15,10 +15,14 @@ import { AlbumService } from '../services/album.service';
 import { v4 as uuid4 } from 'uuid';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
+import { TrackService } from 'src/modules/tracks/services/track.service';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(
+    private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -59,6 +63,7 @@ export class AlbumController {
   public async deleteAlbum(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<IAlbum> {
+    this.trackService.deleteAlbumIdById(id);
     return this.albumService.deleteAlbum(id);
   }
 }

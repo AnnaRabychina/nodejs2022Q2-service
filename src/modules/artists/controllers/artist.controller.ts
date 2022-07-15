@@ -15,10 +15,16 @@ import { ArtistService } from '../services/artist.service';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { v4 as uuid4 } from 'uuid';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
+import { AlbumService } from 'src/modules/albums/services/album.service';
+import { TrackService } from 'src/modules/tracks/services/track.service';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -59,6 +65,8 @@ export class ArtistController {
   public async deleteArtist(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<IArtist> {
+    this.albumService.deleteArtistIdById(id);
+    this.trackService.deleteArtistIdById(id);
     return this.artistService.deleteArtist(id);
   }
 }

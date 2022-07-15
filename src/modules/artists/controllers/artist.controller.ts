@@ -8,6 +8,7 @@ import {
   Param,
   Put,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { IArtist } from '../artist.interface';
 import { ArtistService } from '../services/artist.service';
@@ -27,7 +28,9 @@ export class ArtistController {
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  public async getArtist(@Param('id') id: string): Promise<IArtist> {
+  public async getArtist(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<IArtist> {
     return this.artistService.getArtistById(id);
   }
 
@@ -45,7 +48,7 @@ export class ArtistController {
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   public async updateArtist(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<IArtist> {
     return this.artistService.updateArtist(id, updateArtistDto);
@@ -53,7 +56,9 @@ export class ArtistController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteArtist(@Param('id') id: string): Promise<IArtist> {
+  public async deleteArtist(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<IArtist> {
     return this.artistService.deleteArtist(id);
   }
 }

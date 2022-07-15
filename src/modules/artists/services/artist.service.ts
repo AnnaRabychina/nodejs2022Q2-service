@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IArtist } from '../artist.interface';
 import { v4 as uuid4 } from 'uuid';
 
@@ -11,7 +11,11 @@ export class ArtistService {
   }
 
   public async getArtistById(id: string): Promise<IArtist> {
-    return this.artists.find((artist) => artist.id === id);
+    const artist = this.artists.find((artist) => artist.id === id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return artist;
   }
 
   public async createArtist(artist: IArtist): Promise<IArtist> {
@@ -23,12 +27,18 @@ export class ArtistService {
   public async updateArtist(id: string, artist: IArtist): Promise<IArtist> {
     const updatedArtist = { ...artist, id };
     const index = this.artists.findIndex((artist) => artist.id === id);
+    if (!this.artists[index]) {
+      throw new NotFoundException('Artist not found');
+    }
     this.artists[index] = updatedArtist;
     return updatedArtist;
   }
 
   public async deleteArtist(id: string): Promise<IArtist> {
     const artist = this.artists.find((artist) => artist.id === id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
     this.artists.splice(this.artists.indexOf(artist), 1);
     return artist;
   }

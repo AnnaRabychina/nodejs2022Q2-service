@@ -8,7 +8,9 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/AnnaRabychina/nodejs2022Q2-service.git
+git checkout rest-service-part1
+cd nodejs2022Q2-service
 ```
 
 ## Installing NPM modules
@@ -69,4 +71,3 @@ npm run format
 
 Press <kbd>F5</kbd> to debug.
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging

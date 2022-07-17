@@ -4,7 +4,7 @@ import { v4 as uuid4 } from 'uuid';
 
 @Injectable()
 export class TrackService {
-  private static tracks: ITrack[] = [];
+  static tracks: ITrack[] = [];
 
   public async getAllTracks(): Promise<ITrack[]> {
     return TrackService.tracks;

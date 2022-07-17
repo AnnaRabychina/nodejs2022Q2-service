@@ -4,7 +4,7 @@ import { v4 as uuid4 } from 'uuid';
 
 @Injectable()
 export class AlbumService {
-  private static albums: IAlbum[] = [];
+  static albums: IAlbum[] = [];
 
   public async getAllAlbums(): Promise<IAlbum[]> {
     return AlbumService.albums;

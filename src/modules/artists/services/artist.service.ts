@@ -4,14 +4,14 @@ import { v4 as uuid4 } from 'uuid';
 
 @Injectable()
 export class ArtistService {
-  private readonly artists: IArtist[] = [];
+  static artists: IArtist[] = [];
 
   public async getAllArtists(): Promise<IArtist[]> {
-    return this.artists;
+    return ArtistService.artists;
   }
 
   public async getArtistById(id: string): Promise<IArtist> {
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = ArtistService.artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
     } else {
@@ -21,27 +21,27 @@ export class ArtistService {
 
   public async createArtist(artist: IArtist): Promise<IArtist> {
     const newArtist = { ...artist, id: uuid4() };
-    this.artists.push(newArtist);
+    ArtistService.artists.push(newArtist);
     return newArtist;
   }
 
   public async updateArtist(id: string, artist: IArtist): Promise<IArtist> {
     const updatedArtist = { ...artist, id };
-    const index = this.artists.findIndex((artist) => artist.id === id);
-    if (!this.artists[index]) {
+    const index = ArtistService.artists.findIndex((artist) => artist.id === id);
+    if (!ArtistService.artists[index]) {
       throw new NotFoundException('Artist not found');
     } else {
-      this.artists[index] = updatedArtist;
+      ArtistService.artists[index] = updatedArtist;
       return updatedArtist;
     }
   }
 
   public async deleteArtist(id: string): Promise<IArtist> {
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = ArtistService.artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
     } else {
-      this.artists.splice(this.artists.indexOf(artist), 1);
+      ArtistService.artists.splice(ArtistService.artists.indexOf(artist), 1);
       return artist;
     }
   }

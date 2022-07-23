@@ -1,4 +1,4 @@
-# Home Library Service
+# Home Library Service: Part 2 - Containerization, Docker
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@
 
 ```
 git clone https://github.com/AnnaRabychina/nodejs2022Q2-service.git
-git checkout rest-service-part1
+git checkout rest-service-part2
 cd nodejs2022Q2-service
 ```
 
@@ -55,6 +55,12 @@ To run only specific test suite with authorization
 
 ```
 npm run test:auth -- <path to suite>
+```
+
+### Docker
+
+```
+npm run docker
 ```
 
 ### Auto-fix and format

@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { IAlbum } from 'src/modules/albums/album.interface';
 import { AlbumService } from 'src/modules/albums/services/album.service';
-import { IArtist } from 'src/modules/artists/artist.interface';
-import { ArtistService } from 'src/modules/artists/services/artist.service';
 import { TrackService } from 'src/modules/tracks/services/track.service';
 import { ITrack } from 'src/modules/tracks/track.interface';
 import { IFavoritesResponses } from '../favorites.interface';
@@ -22,7 +20,6 @@ export class FavoritesController {
   constructor(
     private readonly favoritesService: FavoritesService,
     private readonly albumService: AlbumService,
-    private readonly artistService: ArtistService,
     private readonly trackService: TrackService,
   ) {}
 
@@ -37,7 +34,7 @@ export class FavoritesController {
   async addFavorite(
     @Param('type') type: string,
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<IArtist | IAlbum | ITrack> {
+  ): Promise<IAlbum | ITrack> {
     return this.favoritesService.addToFavorites(type, id);
   }
 

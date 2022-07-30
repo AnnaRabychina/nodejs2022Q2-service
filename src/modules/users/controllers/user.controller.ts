@@ -11,7 +11,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { IUser } from '../user.interface';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
 
@@ -21,21 +20,19 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  public async getUsers(): Promise<IUser[]> {
+  public async getUsers() {
     return this.userService.getAllUsers();
   }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  public async getUser(@Param('id', ParseUUIDPipe) id: string): Promise<IUser> {
+  public async getUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.getUserById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  public async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<IUser> {
+  public async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
 
@@ -44,7 +41,7 @@ export class UserController {
   public async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): Promise<IUser> {
+  ) {
     return this.userService.updateUser(id, updatePasswordDto);
   }
 
@@ -52,7 +49,7 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteUser(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IUser> {
+  ): Promise<void> {
     return this.userService.deleteUser(id);
   }
 }

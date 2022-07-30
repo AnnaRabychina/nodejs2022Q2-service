@@ -1,4 +1,4 @@
-FROM postgres:14-alpine
+FROM postgres:alpine
 
 RUN mkdir /logs
 

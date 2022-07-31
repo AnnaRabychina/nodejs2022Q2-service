@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
 import { FavoritesService } from '../services/favorites.service';
@@ -15,7 +16,7 @@ export class FavoritesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  public async getFavorites() {
+  async getFavorites() {
     return this.favoritesService.getFavorites();
   }
 
@@ -23,17 +24,17 @@ export class FavoritesController {
   @HttpCode(HttpStatus.CREATED)
   async addFavorite(
     @Param('type') type: string,
-    //@Param('id', new ParseUUIDPipe({ version: '4' })),
+    @Param('id', new ParseUUIDPipe()) id: string,
   ) {
-    return this.favoritesService.addToFavorites(type);
+    return this.favoritesService.addToFavorites(type, id);
   }
 
   @Delete('/:type/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteFromFavorites(
+  async deleteFavorite(
     @Param('type') type: string,
-    // @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
-    return this.favoritesService.deleteFromFavorites(type);
+    return this.favoritesService.deleteFromFavorites(type, id);
   }
 }

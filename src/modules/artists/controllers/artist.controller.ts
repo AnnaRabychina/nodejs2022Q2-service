@@ -13,16 +13,10 @@ import {
 import { ArtistService } from '../services/artist.service';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
-import { AlbumService } from 'src/modules/albums/services/album.service';
-import { TrackService } from 'src/modules/tracks/services/track.service';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(
-    private readonly artistService: ArtistService,
-    private readonly albumService: AlbumService,
-    private readonly trackService: TrackService,
-  ) {}
+  constructor(private readonly artistService: ArtistService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

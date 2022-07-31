@@ -1,64 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ITrack } from '../track.interface';
-import { v4 as uuid4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateTrackDto } from '../dto/create-track.dto';
+import { UpdateTrackDto } from '../dto/update-track.dto';
+import { TrackEntity } from '../entities/track.entity';
 
 @Injectable()
 export class TrackService {
-  static tracks: ITrack[] = [];
+  constructor(
+    @InjectRepository(TrackEntity)
+    private trackRepository: Repository<TrackEntity>,
+  ) {}
 
-  public async getAllTracks(): Promise<ITrack[]> {
-    return TrackService.tracks;
+  public async getAllTracks() {
+    return await this.trackRepository.find();
   }
 
-  public async getTrackById(id: string): Promise<ITrack> {
-    const track = TrackService.tracks.find((track) => track.id === id);
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    } else {
-      return track;
-    }
-  }
-
-  public async createTrack(track: ITrack): Promise<ITrack> {
-    const newTrack = { ...track, id: uuid4() };
-    TrackService.tracks.push(newTrack);
-    return newTrack;
-  }
-
-  public async updateTrack(id: string, track: ITrack): Promise<ITrack> {
-    const updatedTrack = { ...track, id };
-    const index = TrackService.tracks.findIndex((track) => track.id === id);
-    if (!TrackService.tracks[index]) {
-      throw new NotFoundException('Track not found');
-    } else {
-      TrackService.tracks[index] = updatedTrack;
-      return updatedTrack;
-    }
-  }
-
-  public async deleteTrack(id: string): Promise<ITrack> {
-    const track = TrackService.tracks.find((track) => track.id === id);
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    } else {
-      TrackService.tracks.splice(TrackService.tracks.indexOf(track), 1);
-      return track;
-    }
-  }
-
-  public async deleteArtistIdById(artistId: string): Promise<void> {
-    TrackService.tracks.forEach((track) => {
-      if (track.artistId === artistId) {
-        track.artistId = null;
-      }
+  public async getTrackById(trackId: string) {
+    const track = await this.trackRepository.findOne({
+      where: { id: trackId },
     });
+    if (!track)
+      throw new NotFoundException(`Track with id = ${trackId} was not found`);
+    return track;
   }
 
-  public async deleteAlbumIdById(albumId: string): Promise<void> {
-    TrackService.tracks.forEach((track) => {
-      if (track.albumId === albumId) {
-        track.albumId = null;
-      }
+  public async createTrack(trackDto: CreateTrackDto) {
+    const newTrack = this.trackRepository.create(trackDto);
+    return this.trackRepository.save(newTrack);
+  }
+
+  public async updateTrack(trackId: string, trackDto: UpdateTrackDto) {
+    const updatedTrack = await this.trackRepository.findOne({
+      where: { id: trackId },
     });
+    if (!updatedTrack) {
+      throw new NotFoundException(`Track with id = ${trackId} was not found`);
+    }
+    return await this.trackRepository.save({ ...updatedTrack, ...trackDto });
+  }
+
+  public async deleteTrack(trackId: string) {
+    const result = await this.trackRepository.delete(trackId);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Track with id = ${trackId} was not found`);
+    }
   }
 }

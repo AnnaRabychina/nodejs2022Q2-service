@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArtistEntity } from 'src/modules/artists/entities/artist.entity';
 import { Repository } from 'typeorm';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { AlbumEntity } from '../entities/album.entity';
@@ -9,15 +8,15 @@ import { AlbumEntity } from '../entities/album.entity';
 export class AlbumService {
   constructor(
     @InjectRepository(AlbumEntity)
-    private artistRepository: Repository<ArtistEntity>,
+    private albumRepository: Repository<AlbumEntity>,
   ) {}
 
   public async getAllAlbums() {
-    return await this.artistRepository.find();
+    return await this.albumRepository.find();
   }
 
   public async getAlbumById(albumId: string) {
-    const album = await this.artistRepository.findOne({
+    const album = await this.albumRepository.findOne({
       where: { id: albumId },
     });
     if (!album)
@@ -26,22 +25,22 @@ export class AlbumService {
   }
 
   public async createAlbum(albumDto: CreateAlbumDto) {
-    const newAlbum = this.artistRepository.create(albumDto);
-    return this.artistRepository.save(newAlbum);
+    const newAlbum = this.albumRepository.create(albumDto);
+    return this.albumRepository.save(newAlbum);
   }
 
   public async updateAlbum(albumId: string, albumDto: CreateAlbumDto) {
-    const updatedAlbum = await this.artistRepository.findOne({
+    const updatedAlbum = await this.albumRepository.findOne({
       where: { id: albumId },
     });
     if (!updatedAlbum) {
       throw new NotFoundException(`Album with id = ${albumId} was not found`);
     }
-    return await this.artistRepository.save({ ...updatedAlbum, ...albumDto });
+    return await this.albumRepository.save({ ...updatedAlbum, ...albumDto });
   }
 
   public async deleteAlbum(albumId: string) {
-    const result = await this.artistRepository.delete(albumId);
+    const result = await this.albumRepository.delete(albumId);
     if (result.affected === 0) {
       throw new NotFoundException(`Album with id = ${albumId} was not found`);
     }

@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenv.config();
 
@@ -10,6 +10,9 @@ export const configService: DataSourceOptions = {
   username: process.env.POSTGRES_USER as string,
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DB as string,
-  entities: ['dist/**/entities/*.entity.js'],
-  synchronize: true,
+  entities: ['./dist/**/*.entity.js'],
+  migrations: ['./dist/migrations/*.js'],
+  synchronize: false,
 };
+
+export const dataSource: DataSource = new DataSource(configService);

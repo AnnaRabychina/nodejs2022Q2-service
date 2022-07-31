@@ -1,4 +1,4 @@
-# Home Library Service
+# Home Library Service: Part 2 - Containerization, Docker
 
 ## Prerequisites
 
@@ -8,7 +8,9 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/AnnaRabychina/nodejs2022Q2-service.git
+git checkout rest-service-part2
+cd nodejs2022Q2-service
 ```
 
 ## Installing NPM modules
@@ -55,6 +57,12 @@ To run only specific test suite with authorization
 npm run test:auth -- <path to suite>
 ```
 
+### Docker
+
+```
+npm run docker
+```
+
 ### Auto-fix and format
 
 ```
@@ -69,4 +77,3 @@ npm run format
 
 Press <kbd>F5</kbd> to debug.
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging

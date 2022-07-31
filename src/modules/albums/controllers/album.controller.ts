@@ -10,9 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { IAlbum } from '../album.interface';
 import { AlbumService } from '../services/album.service';
-import { v4 as uuid4 } from 'uuid';
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
 import { TrackService } from 'src/modules/tracks/services/track.service';
@@ -26,27 +24,20 @@ export class AlbumController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  public async getAlbums(): Promise<IAlbum[]> {
+  public async getAlbums() {
     return this.albumService.getAllAlbums();
   }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  public async getAlbum(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IAlbum> {
+  public async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
     return this.albumService.getAlbumById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  public async createAlbum(
-    @Body() createAlbumDto: CreateAlbumDto,
-  ): Promise<IAlbum> {
-    return this.albumService.createAlbum({
-      ...createAlbumDto,
-      id: uuid4(),
-    });
+  public async createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
+    return this.albumService.createAlbum(createAlbumDto);
   }
 
   @Put('/:id')
@@ -54,15 +45,13 @@ export class AlbumController {
   public async updateAlbum(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Promise<IAlbum> {
+  ) {
     return this.albumService.updateAlbum(id, updateAlbumDto);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteAlbum(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IAlbum> {
+  public async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
     this.trackService.deleteAlbumIdById(id);
     return this.albumService.deleteAlbum(id);
   }

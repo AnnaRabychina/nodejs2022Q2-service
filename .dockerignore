@@ -1,0 +1,6 @@
+.gitignore
+.git
+Doskerfile
+node_modules
+dist
+test

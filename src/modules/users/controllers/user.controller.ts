@@ -39,7 +39,7 @@ export class UserController {
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   public async updateUser(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.userService.updateUser(id, updatePasswordDto);

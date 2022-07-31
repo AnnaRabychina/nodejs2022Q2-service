@@ -29,8 +29,6 @@ export class UserService {
   }
 
   async createUser(userDto: CreateUserDto) {
-    await this.isLoginExists(userDto.login);
-
     const createdUser = this.userRepository.create(userDto);
     return (await this.userRepository.save(createdUser)).toResponse();
   }
@@ -56,17 +54,5 @@ export class UserService {
     if (result.affected === 0) {
       throw new NotFoundException(`User with id = ${userId} was not found`);
     }
-  }
-
-  async findByLogin(login: string) {
-    const user = await this.userRepository.findOne({ where: { login } });
-    if (user) return user;
-    throw new NotFoundException(`User with login = ${login} was not found`);
-  }
-
-  async isLoginExists(login: string): Promise<void> {
-    const user = await this.findByLogin(login);
-    if (user)
-      throw new ForbiddenException(`User with login = ${login} already exists`);
   }
 }

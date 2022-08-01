@@ -1,0 +1,41 @@
+version: '3.7'
+networks:
+  node-postgres-bridge:
+    driver: bridge
+
+services:
+  node:
+    container_name: service_app
+    image: pmateam30/nodejs2022q2-service_dbase:service_app
+    env_file:
+      - .env
+    build:
+      context: .
+    ports:
+      - '${PORT}:${PORT}'
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+    depends_on:
+      - postgres
+    networks:
+      - node-postgres-bridge
+  postgres:
+    container_name: service_dbase
+    image: pmateam30/nodejs2022q2-service_dbase:service_dbase
+    env_file:
+      - .env
+    build: ./db/
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    restart: unless-stopped
+    volumes:
+      - database:/var/lib/postgresql/data
+      - database-logs:/logs
+    networks:
+      - node-postgres-bridge
+volumes:
+  database:
+  database-logs:

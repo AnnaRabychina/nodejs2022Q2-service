@@ -1,4 +1,4 @@
-# Home Library Service
+# Home Library Service: Part 2 - Containerization, Docker
 
 ## Prerequisites
 
@@ -8,7 +8,9 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/AnnaRabychina/nodejs2022Q2-service.git
+git checkout rest-service-part2
+cd nodejs2022Q2-service
 ```
 
 ## Installing NPM modules
@@ -17,11 +19,19 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
+### Run multi-container application using Docker
 
 ```
-npm start
+npm run docker
 ```
+
+###  Scan images for security vulnerabilities
+
+```
+npm run docker:scan
+```
+
+## Running application
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
@@ -69,4 +79,3 @@ npm run format
 
 Press <kbd>F5</kbd> to debug.
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging

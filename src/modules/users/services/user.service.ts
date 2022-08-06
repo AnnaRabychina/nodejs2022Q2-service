@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserEntity } from '../entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { generatePasswordHash } from 'src/modules/utils/getHashedPassword';
 
 @Injectable()
 export class UserService {
@@ -29,7 +31,9 @@ export class UserService {
   }
 
   async createUser(userDto: CreateUserDto) {
-    const createdUser = this.userRepository.create(userDto);
+    const hashedPassword = await generatePasswordHash(userDto.password);
+    const newUserDto = { ...userDto, password: hashedPassword };
+    const createdUser = this.userRepository.create(newUserDto);
     return (await this.userRepository.save(createdUser)).toResponse();
   }
 
@@ -40,11 +44,20 @@ export class UserService {
     if (!updatedUser) {
       throw new NotFoundException(`User with id = ${userId} was not found`);
     }
-    if (updatedUser.password !== updatePasswordDto.oldPassword) {
+
+    const newHashedNewPassword = await generatePasswordHash(
+      updatePasswordDto.newPassword,
+    );
+
+    const isValidPassword = await bcrypt.compare(
+      updatePasswordDto.oldPassword,
+      updatedUser.password,
+    );
+    if (!isValidPassword) {
       throw new ForbiddenException(`Old password is wrong`);
     }
 
-    updatedUser.password = updatePasswordDto.newPassword;
+    updatedUser.password = newHashedNewPassword;
 
     return (await this.userRepository.save(updatedUser)).toResponse();
   }

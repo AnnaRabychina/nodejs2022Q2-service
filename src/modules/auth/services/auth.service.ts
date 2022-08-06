@@ -4,6 +4,7 @@ import { UserEntity } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { LoginUserDto } from '../dto/login-user.dto';
 import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,13 @@ export class AuthService {
       select: ['id', 'password'],
       where: { login: loginUser.login },
     });
-    if (!user || loginUser.password !== user.password) {
+
+    const isValidPassword = await bcrypt.compare(
+      loginUser.password,
+      user.password,
+    );
+
+    if (!user || !isValidPassword) {
       throw new HttpException(
         `User with login = ${loginUser.login} was not found`,
         HttpStatus.FORBIDDEN,

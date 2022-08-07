@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -37,5 +42,24 @@ export class AuthService {
       { expiresIn: process.env.TOKEN_EXPIRE_TIME },
     );
     return { accessToken };
+  }
+
+  async refreshToken(token: { refreshToken: string }) {
+    try {
+      const verify = this.jwtService.verify(token.refreshToken);
+
+      const refreshToken = this.jwtService.sign(
+        { id: verify.id, login: verify.login },
+        { expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME },
+      );
+      const accessToken = this.jwtService.sign(
+        { id: verify.id, login: verify.login },
+        { expiresIn: process.env.TOKEN_EXPIRE_TIME },
+      );
+
+      return { accessToken, refreshToken };
+    } catch (e) {
+      throw new ForbiddenException('Invalid refresh token');
+    }
   }
 }

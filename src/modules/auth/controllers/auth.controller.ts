@@ -20,4 +20,8 @@ export class AuthController {
   signup(@Body() createdUser: CreateUserDto): Promise<CreateUserDto> {
     return this.userService.createUser(createdUser);
   }
+  @Post('/refresh')
+  refreshToken(@Body() token: { refreshToken: string }) {
+    return this.authService.refreshToken(token);
+  }
 }

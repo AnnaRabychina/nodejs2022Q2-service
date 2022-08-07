@@ -6,6 +6,7 @@ import { AlbumModule } from '../albums/album.module';
 import { ArtistModule } from '../artists/artist.module';
 import { TrackModule } from '../tracks/track.module';
 import { FavoritesEntity } from './entities/favorites.entity';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   providers: [FavoritesService],
@@ -15,6 +16,7 @@ import { FavoritesEntity } from './entities/favorites.entity';
     ArtistModule,
     AlbumModule,
     TrackModule,
+    AuthModule,
   ],
 })
 export class FavoritesModule {}

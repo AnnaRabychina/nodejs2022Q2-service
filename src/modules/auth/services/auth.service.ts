@@ -3,37 +3,39 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { LoginUserDto } from '../dto/login-user.dto';
-import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private jwtService: JwtService,
   ) {}
 
-  async login(loginUser: LoginUserDto): Promise<{ token: string }> {
+  async login(loginUser: LoginUserDto): Promise<{ accessToken: string }> {
     const user = await this.userRepository.findOne({
       select: ['id', 'password'],
       where: { login: loginUser.login },
     });
+
+    if (!user) {
+      throw new HttpException(`User was not founded`, HttpStatus.FORBIDDEN);
+    }
 
     const isValidPassword = await bcrypt.compare(
       loginUser.password,
       user.password,
     );
 
-    if (!user || !isValidPassword) {
-      throw new HttpException(
-        `User with login = ${loginUser.login} was not found`,
-        HttpStatus.FORBIDDEN,
-      );
+    if (!isValidPassword) {
+      throw new HttpException(`Password is not correct`, HttpStatus.FORBIDDEN);
     }
-    const token = await jwt.sign(
+    const accessToken = this.jwtService.sign(
       { id: user.id, login: loginUser.login },
-      process.env.JWT_SECRET_KEY,
+      { expiresIn: process.env.TOKEN_EXPIRE_TIME },
     );
-    return { token };
+    return { accessToken };
   }
 }

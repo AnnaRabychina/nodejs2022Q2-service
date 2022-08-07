@@ -7,9 +7,12 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { FavoritesService } from '../services/favorites.service';
 
+@UseGuards(AuthGuard)
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}

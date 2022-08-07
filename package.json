@@ -21,7 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker": "docker compose up",
     "docker:scan": "docker scan pmateam30/nodejs2022q2-service_dbase:service_app",
-    "docker:dev" : "npm run build && npm run migration:run && npm run start:dev",
+    "docker:dev": "npm run build && npm run migration:run && npm run start:dev",
     "typeorm": "ts-node ./node_modules/typeorm/cli -d ./src/ormconfig.ts",
     "migration:generate": "npx typeorm-ts-node-commonjs migration:generate ./src/migrations/install -d ./src/ormconfig.ts",
     "migration:run": "npx typeorm-ts-node-commonjs migration:run -d ./src/ormconfig.ts"

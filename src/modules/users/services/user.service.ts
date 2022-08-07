@@ -9,7 +9,7 @@ import { UpdatePasswordDto } from '../dto/update-password.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { generatePasswordHash } from 'src/modules/utils/getHashedPassword';
+import { getHashedPassword } from '../../../utils/getHashedPassword';
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
   }
 
   async createUser(userDto: CreateUserDto) {
-    const hashedPassword = await generatePasswordHash(userDto.password);
+    const hashedPassword = await getHashedPassword(userDto.password);
     const newUserDto = { ...userDto, password: hashedPassword };
     const createdUser = this.userRepository.create(newUserDto);
     return (await this.userRepository.save(createdUser)).toResponse();
@@ -45,7 +45,7 @@ export class UserService {
       throw new NotFoundException(`User with id = ${userId} was not found`);
     }
 
-    const newHashedNewPassword = await generatePasswordHash(
+    const newHashedNewPassword = await getHashedPassword(
       updatePasswordDto.newPassword,
     );
 

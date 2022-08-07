@@ -9,11 +9,14 @@ import {
   Put,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from '../services/artist.service';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
